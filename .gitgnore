@@ -14,5 +14,6 @@ models/*
 models/logs/*
 *.mat
 .idea
+.idea/
 *.json
 *.png
