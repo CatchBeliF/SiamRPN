@@ -55,4 +55,4 @@ class Config:
     track_lr = 0.295
     min_scale = 0.1
     max_scale = 10
-    use_others = True
+    use_others = False
