@@ -57,7 +57,7 @@ def train(video_dir, model_path=None, vis_port=None, init=None):
     train_dataloader = DataLoader(train_dataset, batch_size=Config.train_batch_size * torch.cuda.device_count(),
                                   shuffle=True, num_workers=Config.train_num_workers * torch.cuda.device_count(),
                                   pin_memory=True, drop_last=True)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=Config.train_batch_size * torch.cuda.device_count(),
+    valid_dataloader = DataLoader(valid_dataset, batch_size=Config.valid_batch_size * torch.cuda.device_count(),
                                   shuffle=True, num_workers=Config.valid_num_workers * torch.cuda.device_count(),
                                   pin_memory=True, drop_last=True)
     # 只有一张显卡所以这torch.cuda.device_count()是1

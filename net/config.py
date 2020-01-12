@@ -22,6 +22,7 @@ class Config:
     iou_pos_threshold = 0.6
     iou_neg_threshold = 0.3
     train_batch_size = 32
+    valid_batch_size = 8
     train_ratio = 0.99
     train_num_workers = 4
     valid_num_workers = 4
