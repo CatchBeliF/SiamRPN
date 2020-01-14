@@ -12,6 +12,7 @@ test/*
 *.pth
 models/*
 data/logs/*
+datas/*
 *.mat
 .idea
 *.json
