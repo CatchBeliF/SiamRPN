@@ -50,7 +50,7 @@ class Getdata(data.Dataset):
             assert len(traj) > 1, "sequence_name: {}".format(img_name)
             exemplar_idx = np.random.choice(list(range(len(traj))))
             exemplar_path = glob(os.path.join(self.video_dir, img_name,
-                                              traj[exemplar_idx] + ".{:02d}.gt*.jpg".format(trkid)))[0]
+                                              traj[exemplar_idx] + ".{:02d}.patch*.jpg".format(trkid)))[0]
             exemplar_img = cv2.imread(exemplar_path)
             # 一开始选的 图片大小都是(500, 500, 3)
             # cv2默认为BGR顺序，一般软件用RGB
@@ -70,7 +70,7 @@ class Getdata(data.Dataset):
             # 下面加入采样权重是为了每个都能平等的选到
             weights = self.sample_weights(exemplar_idx, low_idx, high_idx, Config.sample_type)
             instance_name = np.random.choice(traj[low_idx:exemplar_idx] + traj[exemplar_idx + 1:high_idx], p=weights)
-            instance_path = glob(os.path.join(self.video_dir, img_name, instance_name + ".{:02d}.gt*.jpg".format(trkid)))[0]
+            instance_path = glob(os.path.join(self.video_dir, img_name, instance_name + ".{:02d}.patch*.jpg".format(trkid)))[0]
             instance_gt_w, instance_gt_h, instance_w, instance_h = self.common_fuc(instance_path)
             # 接下来的这些并不懂，但为了训练效果好吧,过滤掉一些特殊案例
             img_ratio = min(instance_gt_h / instance_gt_w, instance_gt_w / instance_gt_h)
@@ -107,12 +107,19 @@ class Getdata(data.Dataset):
             # 这里cls_label_map是根据iou的 dtype = float64
 
     def common_fuc(self, img_path):
-        img_gt_w, img_gt_h, img_w, img_h = float(img_path.split('/')[-1].split('.')[2].split('_')[-1]), \
-                                           float(img_path.split('/')[-1].split('.')[4].split('_')[-1]), \
-                                           float(img_path.split('/')[-1].split('.')[6].split('_')[-1]), \
-                                           float(img_path.split('/')[-1].split('.')[8].split('_')[-1])
-
+        img_gt_w, img_gt_h, img_w, img_h = float(img_path.split('/')[-1].split('_')[2]), \
+                                           float(img_path.split('/')[-1].split('_')[4][1:]), \
+                                           float(img_path.split('/')[-1].split('_')[7]), \
+                                           float(img_path.split('/')[-1].split('_')[-1][:-4])
         return img_gt_w, img_gt_h, img_w, img_h
+
+    # def common_fuc(self, img_path):
+    #     img_gt_w, img_gt_h, img_w, img_h = float(img_path.split('/')[-1].split('.')[2].split('_')[-1]), \
+    #                                        float(img_path.split('/')[-1].split('.')[4].split('_')[-1]), \
+    #                                        float(img_path.split('/')[-1].split('.')[6].split('_')[-1]), \
+    #                                        float(img_path.split('/')[-1].split('.')[8].split('_')[-1])
+    #
+    #     return img_gt_w, img_gt_h, img_w, img_h
 
     def sample_weights(self, center, low_idx, high_idx, sample_type='uniform'):
         if Config.non_local:

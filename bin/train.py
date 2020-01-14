@@ -270,7 +270,7 @@ def train(video_dir, model_path=None, vis_port=None, init=None):
 
 
 if __name__ == '__main__':
-    video_dir = "/home/cbf/datasets/ILSVRC2015_VID/ILSVRC2015_VID_curation"
+    video_dir = "/home/cbf/datasets/ILSVRC2015_VID/ILSVRC2015_VID_curation2"
     model_path = None
     vis_port = 8097
     init = None

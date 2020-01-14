@@ -17,14 +17,14 @@ def get_exemplar_img(img, bbox, size_z, img_mean=None):
 
 def get_instance_img(img, bbox, size_z, size_x, img_mean):
     cx, cy, w, h = bbox
-    p = (w + h) / 4
-    img_length = np.sqrt((w + 2 * p) * (h + 2 * p))
+    p = (w + h) / 2
+    img_length = np.sqrt((w + p) * (h + p))
     # 算一个比例
     scale_ratio = size_z / img_length
     instance_length = img_length * size_x / size_z
     instance_img, scale_ratio_x = crop_and_pad(img, cx, cy, size_x, instance_length, img_mean)
-    w_instance = w * scale_ratio_x
-    h_instance = h * scale_ratio_x
+    w_instance = w * scale_ratio
+    h_instance = h * scale_ratio
     return instance_img, scale_ratio, w_instance, h_instance
 
 
