@@ -66,10 +66,11 @@ class Getdata(data.Dataset):
                 continue
             # -------------------------------------------------
             low_idx = max(0, exemplar_idx - Config.frame_range)
-            high_idx = min(exemplar_idx + Config.frame_range, len(traj))
+            high_idx = min(exemplar_idx + Config.frame_range + 1, len(traj))
             # 下面加入采样权重是为了每个都能平等的选到
             weights = self.sample_weights(exemplar_idx, low_idx, high_idx, Config.sample_type)
-            instance_name = np.random.choice(traj[low_idx:exemplar_idx] + traj[exemplar_idx + 1:high_idx], p=weights)
+            instance_idx = np.random.choice((list(range(low_idx, exemplar_idx)) + list(range(exemplar_idx + 1, high_idx))), p=weights)
+            instance_name = traj[instance_idx]
             instance_path = glob(os.path.join(self.video_dir, img_name, instance_name + ".{:02d}.patch*.jpg".format(trkid)))[0]
             instance_gt_w, instance_gt_h, instance_w, instance_h = self.common_fuc(instance_path)
             # 接下来的这些并不懂，但为了训练效果好吧,过滤掉一些特殊案例

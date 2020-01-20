@@ -58,7 +58,7 @@ def train(video_dir, model_path=None, vis_port=None, init=None):
                                   shuffle=True, num_workers=Config.train_num_workers * torch.cuda.device_count(),
                                   pin_memory=True, drop_last=True)
     valid_dataloader = DataLoader(valid_dataset, batch_size=Config.valid_batch_size * torch.cuda.device_count(),
-                                  shuffle=True, num_workers=Config.valid_num_workers * torch.cuda.device_count(),
+                                  shuffle=False, num_workers=Config.valid_num_workers * torch.cuda.device_count(),
                                   pin_memory=True, drop_last=True)
     # 只有一张显卡所以这torch.cuda.device_count()是1
 
@@ -139,6 +139,8 @@ def train(video_dir, model_path=None, vis_port=None, init=None):
                 raise KeyError("something wrong in fixing 3 layers \n")
             # print("fixed layers:  \n", layer)
 
+    if torch.cuda.device_count() > 1:
+        model = nn.DataParallel(model)
     for epoch in range(start_epoch, Config.epoch + 1):
         print("start epoch{} \n".format(epoch))
         train_loss = []
@@ -253,9 +255,12 @@ def train(video_dir, model_path=None, vis_port=None, init=None):
 
         # save model
         if epoch % Config.save_interval == 0:
-            if not os.path.exists('../data/models/'):
-                os.mkdir('../data/models/')
-            save_name = '../data/models/siamrpn_epoch_{}.pth'.format(epoch)
+            # if not os.path.exists('../data/models/'):
+            #     os.mkdir('../data/models/')
+            # save_name = '../data/models/siamrpn_epoch_{}.pth'.format(epoch)
+            if not os.path.exists('../datas/models/'):
+                  os.mkdir('../datas/models/')
+            save_name = '../datas/models/siamrpn_epoch_{}.pth'.format(epoch)
             if torch.cuda.device_count() > 1:
                 new_state_dict = OrderedDict()
                 for k, v in model.state_dict().items():

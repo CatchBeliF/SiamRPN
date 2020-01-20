@@ -45,7 +45,8 @@ class Config:
     ohem_neg = False
     pretrained_model = "/home/cbf/pycharmprojects/siamrpn/model/alexnet.pth"
     fix_former_3_layers = True
-    log_dir = '/home/cbf/pycharmprojects/siamrpn/data/logs'
+    # log_dir = '/home/cbf/pycharmprojects/siamrpn/data/logs'
+    log_dir = '/home/cbf/pycharmprojects/siamrpn/datas/logs'
     show_interval = 3
     topk = 5
     save_interval = 1
